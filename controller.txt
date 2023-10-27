@@ -1,0 +1,85 @@
+
+@Controller
+public class BoardController extends AbstractCommonController {
+
+	@Autowired
+	BoardService boardService;
+
+	// 페이징 관련된 것 같은데 아직 모르겠음 매핑 어떤걸로 해야하지?
+	@RequestMapping(value = "/board/content", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseData<Map<String, Object>> shopReview(@RequestParam Map<String, Object> paramMap,
+			HttpServletRequest request, HttpServletResponse response) {
+		if (!paramMap.containsKey("listCount")) { // 요청개수 10-Def
+			paramMap.put("listCount", 10);
+		}
+		if (!paramMap.containsKey("orderBy")) { // 정렬순서, N-최신순
+			paramMap.put("orderBy", "N");
+		}
+		if (!paramMap.containsKey("deiviceId")) { // 자신의 개시불 여부, 0-false
+			paramMap.put("deiviceId", "0");
+		}
+		if (!paramMap.containsKey("lastRow")) { // 마지막 조회 아이디
+			paramMap.put("lastRow", 0);
+		}
+		Map<String, Object> reVal = new HashMap<String, Object>();
+		reVal.put("board", boardService.getList(paramMap));
+		return resultMap(request, reVal);
+	}
+
+	// 글 목록 불러오기
+	@RequestMapping(value = "/board/list", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseData<Map<String, Object>> getBoardList(@RequestBody Map<String, Object> pMap,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Map<String, Object> reVal = new HashMap<String, Object>();
+		reVal.put("pageData", boardService.getBoardList(pMap));
+//		logger.debug("controller reVal => {}", reVal);
+		return resultMap(request, reVal);
+	}
+
+	// 글 상세 보기
+	@RequestMapping(value = "/board/post", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseData<Map<String, Object>> detailPost(@RequestBody Map<String, Object> pMap,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Map<String, Object> reVal = new HashMap<String, Object>();
+		reVal.put("pageData", boardService.detailPost(pMap));
+//		logger.debug("controller reVal => {}", reVal);
+		return resultMap(request, reVal);
+	}
+
+	// 글 등록하기
+	@RequestMapping(value = "/board/save", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseData<Map<String, Object>> savePost(@RequestBody Board board, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		Map<String, Object> reVal = new HashMap<String, Object>();
+		reVal.put("result", boardService.savePost(board));
+//		logger.debug("controller reVal => {}", reVal);
+		return resultMap(request, reVal);
+	}
+
+	// 글 삭제
+	@RequestMapping(value = "/board/delete", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseData<Map<String, Object>> deletePost(@RequestBody Map<String, Object> pMap,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		boardService.deletePost(pMap);
+		Map<String, Object> reVal = new HashMap<String, Object>();
+		reVal.put("result", "success");
+		return resultMap(request, reVal);
+	}
+
+	// 글 수정
+	@RequestMapping(value = "/board/modify", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseData<Map<String, Object>> modifyPost(@RequestBody Board board, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		Map<String, Object> reVal = new HashMap<String, Object>();
+		reVal.put("result", boardService.modifyPost(board));
+//			logger.debug("controller reVal => {}", reVal);
+		return resultMap(request, reVal);
+	}
+
+}

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dpbs.biz.dao.BoardDao">
+
+		<!-- 글 목록 조회 -->
+		<select id="getBoardList" resultType="Board">
+		SELECT
+		SEQ
+		, TITLE
+		, LOGIN_ID
+		,DATE_FORMAT(CRDATE, '%Y-%m-%d %H:%i:%s') as CRDATE
+		FROM TB_CUSTOMER_BOARD
+		ORDER BY CRDATE desc;
+		</select>
+		
+		<!--  글 상세 조회 -->
+		<select id="getPost" parameterType="Map" resultType="Board">
+		SELECT
+		N.SEQ
+		, N.TITLE
+		, N.CONTENT
+		, N.LOGIN_ID
+		, DATE_FORMAT(N.CRDATE, '%Y-%m-%d %H:%i:%s') as CRDATE
+		FROM TB_CUSTOMER_BOARD N
+		WHERE SEQ = #{seq}
+		</select>
+		
+		<!-- 새로운 글 작성 -->
+		<insert id="savePost" parameterType="Map">
+		INSERT INTO TB_CUSTOMER_BOARD
+		(
+		WRITER,
+		TITLE,
+		CRDATE,
+		CONTENT,
+		LOGIN_ID,
+		DELETEYN,
+		ORG_FILE_NAME,
+		FILE_PATH
+		)
+		VALUES
+		(
+		#{writer}
+		, #{title}
+		, CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul')
+		, #{content}
+		, #{loginId}
+		, #{deleteYn}
+		, #{orgFileName}
+		, #{filePath}
+		)
+		<!-- selectKey: 자동증가 값 처리를 위함 -->
+		<selectKey resultType="Integer" keyProperty="seq"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		</insert>
+
+		<!-- 글 삭제 -->
+		<delete id="deletePost" parameterType="Map">
+		DELETE FROM TB_CUSTOMER_BOARD
+		WHERE
+		SEQ = #{seq}
+		</delete>
+		
+		<!-- 글 수정 -->
+		
+		<update id="modifyPost" parameterType="Board">
+		UPDATE TB_CUSTOMER_BOARD
+		SET
+		TITLE = #{title},
+		CRDATE = CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
+		CONTENT = #{content}
+		WHERE SEQ = #{seq}
+		</update>
+</mapper>

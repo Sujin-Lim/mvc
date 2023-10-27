@@ -1,0 +1,200 @@
+
+
+<!-- 게시글 목록, 게시글 작성 화면입니다. -->
+
+
+
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+<meta name="format-detection"
+	content="telephone=no, address=no, email=no" />
+<title>test</title>
+
+<script type="text/javascript" src="sj.js"
+	charset="UTF-8"></script>
+
+
+</head>
+
+<body>
+	<header class="header">
+		<div class="home">
+			<a href="javascript:;"><span class="description">HOME</span></a> <a
+				href="javascript:;" id="topMenuButton" class="menu"><span
+				class="description">SIDE MENU</span></a>
+		</div>
+		<div class="title">
+			<p>test..</p>
+		</div>
+	</header>
+	<aside class="smenu"></aside>
+	<section class="body">
+		<section class="toparea">
+			<div class="tab2">
+				<ul>
+					<li class="on"><a href="mhbrd001m.html"><span>목록</span></a></li>
+					<li><a href="#" id="writeBtn2"><span>글쓰기</span></a></li>
+
+					<!-- 등록은 아래 글쓰기 버튼과 같은 기능을 하도록 하자...
+						목록, 등록 탭이 안 나눠져 있어서 글쓰기 버튼을 눌러도 목록 부분이 안 바뀌어 져서
+						002m.html을 만들 생각인데 생각해보니 smenu부분을 글 쓰기 눌렀을 때 섹션에 주면 될 듯? 
+						나중으로 미루자 
+					<li><a href="mhbrd002m.html"><span>등록</span></a></li> -->
+				</ul>
+			</div>
+		</section>
+
+		<!-- 글 목록 -->
+
+		<section class="contentbody" id="list">
+			<div class="counsel">
+				<div class="table-radius-line">
+					<table class="memberinfo3 win-font-17" style="width: 100%;">
+						<colgroup>
+							<col style="width: 40px;" />
+							<col style="width: 600px;" />
+							<col style="width: 140px;" />
+							<col />
+						</colgroup>
+						<thead>
+							<tr>
+								<th><span>NO</span></th>
+								<th><span>제목</span></th>
+								<th><span>작성자</span></th>
+								<th><span>작성일</span></th>
+							</tr>
+						</thead>
+					</table>
+					<div class="scrollbar-no-button">
+						<table class="memberinfo3">
+							<colgroup>
+								<col style="width: 40px;" />
+								<col style="width: 600px;" />
+								<col style="width: 140px;" />
+								<col />
+							</colgroup>
+							<!-- 글 목록이 보이는 table -->
+							<tbody id="BoardItemList">
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<button id="writeBtn">글 쓰기</button>
+			</div>
+		</section>
+
+		<!-- 글 상세 조회 -->
+
+		<section class="contentbody" id="detail">
+			<div class="table-type1 table-type1-full">
+				<div class="table-radius-line">
+					<input type="hidden" id="getSEQ" value="" />
+					<div class="scrollbar-no-button">
+						<table class="postTable">
+							<tbody id="postDetail">
+								<tr>
+									<td><h2 id="postTitle"></h2></td>
+								</tr>
+								<tr>
+									<td><div id="postContent" class="scrollbar-no-button" style="width: 98%; height: 400px;"></div></td>
+								</tr>
+								<!-- 글 상세 조회 창에 리플 달 수 있는 곳 만들기 -->
+								<tr>
+									<table>
+										<tr>
+											<td style="width: 82%;"><input type="text"
+												placeholder="리플 작성" style="width: 98%;" id="createReply"></td>
+											<td><div class="buttons">
+													<a href="#" class="saveReplyBtn" id="saveReplyBtn">리플등록</a>
+												</div></td>
+										</tr>
+									</table>
+								<tr>
+									<td>
+										<table>
+											<tbody id="replyItemList">
+											</tbody>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="buttons">
+											<a href="#" class="modifyBtn" id="modifyBtn">수정</a> <a
+												href="#" class="deleteBtn" id="deleteBtn">삭제</a>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- 게시글 쓰기 -->
+
+		<section class="contentbody" id="write">
+			<div class="table-type1 table-type1-full">
+				<div class="table-radius-line">
+					<input type="hidden" id="createSEQ" value="" />
+					<!-- SEQ 값을 저장할 input 필드 추가 -->
+					<table class="postTable">
+						<tbody id="writePost">
+							<tr>
+								<td><input type="text" placeholder="제목 입력"
+									style="width: 98%" id="createTitle"></td>
+							</tr>
+							<tr>
+								<td><textarea placeholder="내용 입력" style="width: 98%; height: 500px; resize: none;" id="createContent"></textarea></td>
+							<tr>
+								<td>
+									<div class="buttons">
+										<a href="#" class="saveBtn" id="saveBtn">등록</a>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+
+		<!-- 게시글 수정 -->
+
+		<section class="contentbody" id="modify">
+			<div class="table-type1 table-type1-full">
+				<div class="table-radius-line">
+					<input type="hidden" id="getSEQ" value="" />
+					<table class="postTable">
+						<tbody id="modifyPost">
+							<tr>
+								<td><input type="text" placeholder="제목 입력"
+									style="width: 98%" id="modifyTitle"></td>
+							</tr>
+							<tr>
+								<td><input type="text" placeholder="내용 입력"
+									style="width: 98%; height: 500px;" id="modifyContent"></td>
+							<tr>
+								<td>
+									<div class="buttons">
+										<a href="#" class="updateBtn" id="updateBtn">수정</a>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+
+
+
+
+	</section>
+</body>
+</html>

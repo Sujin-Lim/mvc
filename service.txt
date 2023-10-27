@@ -1,0 +1,108 @@
+package com.dpbs.biz.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.dpbs.biz.dao.BoardDao;
+import com.dpbs.biz.dto.Board;
+import com.dpbs.biz.dto.PageData;
+import com.dpbs.biz.dto.PageParameter;
+import com.dpbs.security.dto.SignedUser;
+
+@Service("biz.BoardService")
+public class BoardService {
+
+	@Autowired
+	BoardDao boardDao;
+
+	// 글 목록 불러오기
+	@Transactional(value = "txManager")
+	public PageData<Board> getBoardList(Map<String, Object> pMap) throws Exception {
+
+		List<Board> list = new ArrayList<Board>();
+
+		list = boardDao.getBoardList(pMap);
+
+		PageData<Board> pageData = new PageData<Board>();
+		pageData.setDataList(list);
+
+		return pageData;
+
+	}
+
+	// 글 상세내용 보기
+	@Transactional(value = "txManager")
+	public PageData<Board> detailPost(Map<String, Object> pMap) throws Exception {
+
+		List<Board> list = new ArrayList<Board>();
+
+		list = boardDao.getPost(pMap);
+
+		PageData<Board> pageData = new PageData<Board>();
+		pageData.setDataList(list);
+
+		return pageData;
+
+	}
+
+	// 글 등록하기
+	@Transactional(value = "txManager")
+	public String savePost(Board board) throws Exception {
+
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String loginId = ((SignedUser) principal).getUser().getLoginId();
+
+		board.setLoginId(loginId);
+		board.setWriter(loginId);
+
+		boardDao.savePost(board);
+		return "OK";
+	}
+
+	// 글 삭제
+	@Transactional(value = "txManager")
+	public void deletePost(Map<String, Object> pMap) throws Exception {
+		int delete = boardDao.deletePost(pMap);
+	}
+
+	// 글 수정
+	// 글 등록하기
+	@Transactional(value = "txManager")
+	public String modifyPost(Board board) throws Exception {
+
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String loginId = ((SignedUser) principal).getUser().getLoginId();
+
+		board.setLoginId(loginId);
+		board.setWriter(loginId);
+
+		boardDao.modifyPost(board);
+		return "OK";
+	}
+
+	// 페이징 처리
+	public PageData<Board> getList(Map<String, Object> param) {
+
+		int lastRow = Integer.parseInt("" + param.get("lastRow"));
+		int listCount = Integer.parseInt("" + param.get("listCount"));
+
+		PageData<Board> pageData = new PageData<Board>();
+		PageParameter paging = PageParameter.parsePageParameter(lastRow, listCount);
+		param.put("paging", paging);
+		int count = boardDao.findByCnt(param);
+		pageData.setTotalCount(count);
+		if (count > 0) {
+			List<Board> list = boardDao.findBy(param);
+			pageData.setDataList(list);
+			pageData.setParam(param);
+		}
+		return pageData;
+	}
+
+}
