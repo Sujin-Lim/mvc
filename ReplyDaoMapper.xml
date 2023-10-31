@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dpbs.biz.dao.ReplyDao">
+
+	<!-- 글에 연결된 리플 조회 -->
+	<select id="getReplyList" resultType="Reply">
+		SELECT
+		SEQ,
+		IDX,
+		LOGIN_ID,
+		CONTENT,
+		DATE_FORMAT(RDATE, '%Y-%m-%d') as RDATE
+		FROM
+		dpbsdb.TB_CUSTOMER_BOARD_RPLY
+		WHERE IDX = #{idx}
+		ORDER BY RDATE desc;
+	</select>
+
+	<!-- 리플 등록 -->
+	<insert id="saveReply" parameterType="Map">
+		INSERT INTO TB_CUSTOMER_BOARD_RPLY
+		(
+		IDX,
+		CONTENT,
+		RDATE,
+		LOGIN_ID,
+		DELETEYN
+		)
+		VALUES
+		(
+		#{idx}
+		, #{content}
+		, CURDATE()
+		, #{loginId}
+		, #{deleteYn}
+		)
+		<!-- selectKey: 자동증가 값 처리를 위함 -->
+		<selectKey resultType="Integer" keyProperty="seq"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<!-- 리플 삭제 -->
+	<delete id="deleteReply" parameterType="Map">
+		DELETE FROM
+		TB_CUSTOMER_BOARD_RPLY
+		WHERE
+		SEQ = #{seq}
+	</delete>
+
+
+</mapper>
